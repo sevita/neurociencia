@@ -1,14 +1,23 @@
+
+% TODO:
+% Visual: Agregar una version con circulo chico.
+% Paper: Tomar decision de que estimulos asociar 
+% Duración: 3 min
+% Variar frec? 
+
+
+
 %variables de configuración 
 resolucion=[300 300];      %resolución de la ventana
 ventana=[500 200]; 	       %posición inicial de la pantalla
 clrdepth=32;		       %cantidad de bits de los colores
 estimulo=4;                %cantidad de frames que dura el estímulo
-periodo=0.8;   
-duracionExperimento=8;     %medida en segundos
+frecuencia=0.8;   
+duracionExperimento=45;     %medida en segundos
 
 %variables de inicialización
 screenNum=0;               %número de monitor   
-respuesta=[]; 		       %tiempo en el cual fueron tocadas las teclas
+respuestas=[]; 		       %tiempo en el cual fueron tocadas las teclas
 pantalla='blanca';         %dice que pantalla mostrar
 estimulos=[];              %tiempo en el cual aparecieron los estímulos
 
@@ -33,18 +42,18 @@ while toc < duracionExperimento
 	if pressed
 		pressedCodes=find(firstPress);
 		for i=1:size(pressedCodes, 2)
-			respuesta = [respuesta firstPress(pressedCodes(i))-comienzo]
+			respuestas = [respuestas, firstPress(pressedCodes(i))-comienzo]
 		end
 	end
 
 	tiempo = toc;
-	if mod(tiempo,periodo)<=(estimulo-0.1)*frame & strcmp(pantalla,'negra') %me fijo si hay que cambiar la pantalla o no
+	if mod(tiempo,frecuencia)<=(estimulo-0.1)*frame & strcmp(pantalla,'negra') %me fijo si hay que cambiar la pantalla o no
 		Screen('FillRect', wPtr, circle); 
 		Screen('FillOval', wPtr, 255); 
 		vbl=Screen('Flip', wPtr);
 		estimulos = [estimulos vbl-comienzo];
 		pantalla = 'blanca';
-		estimulos
+		estimulos; 
 	else
 		if mod(tiempo,frecuencia)>(estimulo-0.1)*frame & strcmp(pantalla,'blanca')
 			Screen('FillRect', wPtr, black);
@@ -53,9 +62,37 @@ while toc < duracionExperimento
 		end
 	end 
 end 
+while toc < duracionExperimento + 1
+	Screen('FillRect', wPtr, black);
+
+	vbl=Screen('Flip', wPtr); 
+	pantalla = 'negra';
+end
+    
 
 PsychHID('KbQueueStop'); %dejo de guardar las teclas
 
 PsychHID('KbQueueRelease'); %borro la cola
 Screen('CloseAll');
 ShowCursor; 
+
+
+tiempos = []
+for e = estimulos 
+	inicio_rango = e - 0.3
+	fin_rango = e + 0.2 + 0.3
+	contador = 0
+
+	for r = respuestas 
+		if and(r >= inicio_rango, r <= fin_rango)
+			contador = contador + 1
+			respuesta_que_va = r
+		end 
+	end	
+    if contador == 1 
+    	tiempos = [respuesta_que_va - e, tiempos] % tiempos << respuesta_que_va - e 
+    end
+end 
+
+plot(tiempos, 'ob')
+

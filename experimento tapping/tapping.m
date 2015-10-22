@@ -3,7 +3,7 @@ resolucion=[300 300];      %resolución de la ventana
 ventana=[500 200]; 	       %posición inicial de la pantalla
 clrdepth=32;		       %cantidad de bits de los colores
 estimulo=4;                %cantidad de frames que dura el estímulo
-frecuencia=0.8;   
+periodo=0.8;   
 duracionExperimento=8;     %medida en segundos
 
 %variables de inicialización
@@ -37,14 +37,16 @@ while toc < duracionExperimento
 		end
 	end
 
-	if mod(toc,frecuencia)<=(estimulo-0.1)*frame & strcmp(pantalla,'negra') %me fijo si hay que cambiar la pantalla o no
+	tiempo = toc;
+	if mod(tiempo,periodo)<=(estimulo-0.1)*frame & strcmp(pantalla,'negra') %me fijo si hay que cambiar la pantalla o no
 		Screen('FillRect', wPtr, circle); 
 		Screen('FillOval', wPtr, 255); 
 		vbl=Screen('Flip', wPtr);
 		estimulos = [estimulos vbl-comienzo];
 		pantalla = 'blanca';
+		estimulos
 	else
-		if mod(toc,frecuencia)>(estimulo-0.1)*frame & strcmp(pantalla,'blanca')
+		if mod(tiempo,frecuencia)>(estimulo-0.1)*frame & strcmp(pantalla,'blanca')
 			Screen('FillRect', wPtr, black);
 			vbl=Screen('Flip', wPtr); 
 			pantalla = 'negra';

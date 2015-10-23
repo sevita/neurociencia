@@ -27,7 +27,7 @@ HideCursor;
 [wPtr,rect]=Screen('OpenWindow', screenNum, 0, [ventana(1) ventana(2) (resolucion(1)+ventana(1)) (resolucion(2)+ventana(2))], clrdepth);
 
 black=BlackIndex(wPtr);
-circle=BlackIndex(wPtr);
+white=BlackIndex(wPtr);
 
 PsychHID('KbQueueCreate'); %creo una cola para obtener las teclas que se presionaron
 
@@ -35,9 +35,11 @@ Screen('FillRect', wPtr, black);
 frame=Screen('GetFlipInterval' , wPtr); 
 comienzo=Screen(wPtr, 'Flip');
 PsychHID('KbQueueStart');
+%tiempo_inicio=GetSecs;
 tic
 
-while toc < duracionExperimento
+while toc < duracionExperimento %while GetSecs<tiempo_inicio+duracionExperimento
+	tiempo = toc; %tiempo=GetSecs
 	[pressed, firstPress]=PsychHID('KbQueueCheck'); %guardo el tiempo en el cual se tocaron las teclas
 	if pressed
 		pressedCodes=find(firstPress);
@@ -46,9 +48,8 @@ while toc < duracionExperimento
 		end
 	end
 
-	tiempo = toc;
 	if mod(tiempo,frecuencia)<=(estimulo-0.1)*frame & strcmp(pantalla,'negra') %me fijo si hay que cambiar la pantalla o no
-		Screen('FillRect', wPtr, circle); 
+		Screen('FillRect', wPtr, white); 
 		Screen('FillOval', wPtr, 255); 
 		vbl=Screen('Flip', wPtr);
 		estimulos = [estimulos vbl-comienzo];
@@ -62,16 +63,12 @@ while toc < duracionExperimento
 		end
 	end 
 end 
-while toc < duracionExperimento + 1
+while toc < duracionExperimento + 1 %while GetSecs<duracionExperimento+1
 	Screen('FillRect', wPtr, black);
-
 	vbl=Screen('Flip', wPtr); 
-	pantalla = 'negra';
 end
     
-
 PsychHID('KbQueueStop'); %dejo de guardar las teclas
-
 PsychHID('KbQueueRelease'); %borro la cola
 Screen('CloseAll');
 ShowCursor; 
@@ -95,4 +92,40 @@ for e = estimulos
 end 
 
 plot(tiempos, 'ob')
+
+%Para escribir el texto del comienzo
+%Screen('TextFont',window, 'Courier');
+%Screen('TextSize',window, 30);
+%Screen('TextStyle', window, 0);
+%Screen('DrawText', window, 'Here is one way to draw text', 100, 300, rand(3,1)*255);
+%DrawFormattedText(window,'Here is another','center','center',[255 0 255]); 
+%Screen('Flip',window)
+
+%Distintos colores para el circulo
+%Screen('FillOval', wPtr, [0 255 0]); verde
+%Screen('FillOval', wPtr, [255 0 0]); rojo
+%Screen('FillOval', wPtr, [0 0 255]); azul
+%Screen('FillOval', wPtr, [255 255 0]); amarillo
+%Screen('FillOval', wPtr, [0 255 247]); celeste
+%Screen('FillOval', wPtr, [255 0 255]); rosa
+
+%Modificando la posición (con resolución cualdrada)
+%a = resolucion(1);
+%b = resolucion(2);
+%rx = (b-a).*rand(1000,1) + a;
+%ry = (b-a).*rand(1000,1) + a;
+%tam = 20
+%Screen('FillOval', wPtr, [0 255 0], [rx ry rx+tam ry+tam]); 
+
+%Grafico
+%x = 1:size(tiempos);
+%ytiempos = tiempos;
+%yideal = zero(1,size(tiempos));
+%[ax,p1,p2] = plot(x,ytiempos,x,yideal);
+%p2.LineStyle = '--';
+%p1.LineWidth = 3;
+%p2.LineWidth = 2;
+%xlabel(ax(1),'Número del intento') % label x-axis
+%ylabel(ax(1),'Tiempo') % label left y-axis
+
 

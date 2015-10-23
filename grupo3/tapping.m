@@ -1,4 +1,3 @@
-
 % TODO:
 % Visual: Agregar una version con circulo chico.
 % Paper: Tomar decision de que estimulos asociar 

@@ -5,14 +5,14 @@
 % Variar frec? 
 
 
-
+nombreExperimento='Jess.mat'
 %variables de configuración 
 resolucion=[300 300];      %resolución de la ventana
 ventana=[500 200]; 	       %posición inicial de la pantalla
 clrdepth=32;		       %cantidad de bits de los colores
 estimulo=4;                %cantidad de frames que dura el estímulo
 frecuencia=0.8;   
-duracionExperimento=45;     %medida en segundos
+duracionExperimento=60*3;     %medida en segundos
 
 %variables de inicialización
 screenNum=0;               %número de monitor   
@@ -23,8 +23,8 @@ estimulos=[];              %tiempo en el cual aparecieron los estímulos
 %mostar pantalla
 HideCursor; 
 
-[wPtr,rect]=Screen('OpenWindow', screenNum, 0, [ventana(1) ventana(2) (resolucion(1)+ventana(1)) (resolucion(2)+ventana(2))], clrdepth);
-
+[wPtr,rect]=Screen('OpenWindow', 0, clrdepth); % [ventana(1) ventana(2) (resolucion(1)+ventana(1)) (resolucion(2)+ventana(2))],
+[w,h] = Screen('WindowSize',wPtr)
 black=BlackIndex(wPtr);
 white=BlackIndex(wPtr);
 
@@ -32,7 +32,9 @@ PsychHID('KbQueueCreate'); %creo una cola para obtener las teclas que se presion
 
 Screen('FillRect', wPtr, black);
 frame=Screen('GetFlipInterval' , wPtr); 
+DrawFormattedText(wPtr,'El experimento va a comenzar. \n Apreta cualquier tecla cuando veas un círculo. \n ¡Suerte!','center','center',[0 255 0]); 
 comienzo=Screen(wPtr, 'Flip');
+WaitSecs(3)
 PsychHID('KbQueueStart');
 %tiempo_inicio=GetSecs;
 tic
@@ -49,7 +51,8 @@ while toc < duracionExperimento %while GetSecs<tiempo_inicio+duracionExperimento
 
 	if mod(tiempo,frecuencia)<=(estimulo-0.1)*frame & strcmp(pantalla,'negra') %me fijo si hay que cambiar la pantalla o no
 		Screen('FillRect', wPtr, white); 
-		Screen('FillOval', wPtr, 255); 
+		tam = 20
+		Screen('FillOval', wPtr, [0 255 0], [w/2-75 h/2-75 w/2+75 h/2+75]); %, [w h rx+tam ry+tam] 	
 		vbl=Screen('Flip', wPtr);
 		estimulos = [estimulos vbl-comienzo];
 		pantalla = 'blanca';
@@ -76,7 +79,7 @@ ShowCursor;
 tiempos = []
 for e = estimulos 
 	inicio_rango = e - 0.3
-	fin_rango = e + 0.2 + 0.3
+	fin_rango = e + frame*4 + 0.3
 	contador = 0
 
 	for r = respuestas 
@@ -86,11 +89,11 @@ for e = estimulos
 		end 
 	end	
     if contador == 1 
-    	tiempos = [respuesta_que_va - e, tiempos] % tiempos << respuesta_que_va - e 
+    	tiempos = [respuesta_que_va - e, tiempos]; % tiempos << respuesta_que_va - e 
     end
 end 
 
-plot(tiempos, 'ob')
+%plot(tiempos, 'ob')
 
 %Para escribir el texto del comienzo
 %Screen('TextFont',window, 'Courier');
@@ -117,14 +120,16 @@ plot(tiempos, 'ob')
 %Screen('FillOval', wPtr, [0 255 0], [rx ry rx+tam ry+tam]); 
 
 %Grafico
-%x = 1:size(tiempos);
-%ytiempos = tiempos;
-%yideal = zero(1,size(tiempos));
-%[ax,p1,p2] = plot(x,ytiempos,x,yideal);
-%p2.LineStyle = '--';
-%p1.LineWidth = 3;
-%p2.LineWidth = 2;
-%xlabel(ax(1),'Número del intento') % label x-axis
-%ylabel(ax(1),'Tiempo') % label left y-axis
+tam=length(tiempos);
+x = 1:tam;
+yideal = zeros(1,tam);
+subplot(2,1,1)
+plot(x,tiempos,'o',x,yideal,'--');
+xlabel('Número del intento') % label x-axis
+ylabel('Tiempo') % label left y-axis
 
+hold off;
+subplot(2,1,2)
+hist(tiempos,40)
 
+save(nombreExperimento,'tiempos');

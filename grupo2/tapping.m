@@ -4,9 +4,9 @@ ventana=[0 0]; 	       %posición inicial de la pantalla
 clrdepth=32;		       %cantidad de bits de los colores
 estimulo=4;                %cantidad de frames que dura el estímulo
 frecuencia=0.8;   
-duracionExperimento=8;     %medida en segundos
-intervalo=0.05;			   %tiempo antes y despues del estímulo 
-tamEstimulo=50;            %tamaño del estímulo
+duracionExperimento=60;     %medida en segundos
+intervalo=0.2;			   %tiempo antes y despues del estímulo 
+tamEstimulo=150;            %tamaño del estímulo
 
 %variables de inicialización
 screenNum=0;               %número de monitor   
@@ -21,13 +21,15 @@ HideCursor;
 [wPtr,rect]=Screen('OpenWindow', 0, clrdepth);
 
 black=BlackIndex(wPtr);
-dibujoEstimuloX=int64((rect(1)-tamEstimulo)/2);
-dibujoEstimuloY=int64((rect(2)-tamEstimulo)/2);
+[width, height]=Screen('WindowSize', wPtr);
+dibujoEstimuloX=((width-tamEstimulo)/2)
+dibujoEstimuloY=((height-tamEstimulo)/2)
 
 PsychHID('KbQueueCreate'); %creo una cola para obtener las teclas que se presionaron
 
 Screen('FillRect', wPtr, black);
-frame=Screen('GetFlipInterval' , wPtr); 
+frame=Screen('GetFlipInterval' , wPtr)
+frame
 comienzo=Screen(wPtr, 'Flip');
 PsychHID('KbQueueStart');
 tic
@@ -44,7 +46,7 @@ while toc < duracionExperimento
 	tiempo = toc;
 	if mod(tiempo,frecuencia)<=(estimulo-0.1)*frame & strcmp(pantalla,'negra') %me fijo si hay que cambiar la pantalla o no
 		Screen('FillRect', wPtr, black); 
-		Screen('FillRect', wPtr, [255 255 0], [0 0 50 50]); 
+		Screen('FillRect', wPtr, [255 255 0], [dibujoEstimuloX dibujoEstimuloY dibujoEstimuloX+tamEstimulo dibujoEstimuloY+tamEstimulo]); 
 		vbl=Screen('Flip', wPtr);
 		estimulos = [estimulos vbl-comienzo];
 		pantalla = 'blanca';
@@ -65,17 +67,35 @@ PsychHID('KbQueueRelease'); %borro la cola
 Screen('CloseAll');
 ShowCursor;
 
+limInf=intervalo;
+limSup=intervalo+(estimulo-0.1)*frame
+
 for e = estimulos %filtro los datos y los resto
 	aux=false;
 	for r = respuesta
-		if r >= e-intervalo & r <= e+intervalo+estimulo & aux==false
+		if r >= e-limInf & r < e+limSup & aux==false
+			r
+			e
 			filtrado = [filtrado r-e]; %si no hay respuesta a un estímulo, no se tiene en cuenta
 			aux = true;
+			break
 		end
 	end	
 end
 
+filtrado
 %gráfico
-plot(filtrado,'-',0,'--','r')
+x_bins = 1:length(filtrado)
+vector0=zeros(1,length(filtrado))
+subplot(2,1,1)
+plot(x_bins, vector0,'r--')
+hold on
 
+plot(x_bins, filtrado,'b-')
  
+title('ni idea')
+xlabel('estímulo')
+ylabel('diferencia de tiempo')
+hold off
+subplot(2,1,2)
+hist(filtrado,40)

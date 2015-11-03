@@ -16,11 +16,11 @@ sujeto=1;
 
 inputFile = sprintf('priming/palabras%d.csv',sujeto)
 fid = fopen(inputFile, 'r');
-T = textscan(fid, '%s%s%s%s%s%s', 'Delimiter',',');
+T = textscan(fid, '%d%s%s%s%s%s%s', 'Delimiter',',');
 fclose(fid);
 
 target = T(2);
-target = T{1};
+target = target{1};
 
 priming1 = T(3);
 priming1 = priming1{1};

@@ -41,7 +41,6 @@ cantTarget=5;
 RR=[];
 NR=[];
 NN=[];
-respuestas=[]
 tiempos_target=[]; 			%0 --> ser vivo / 1 --> no vivo
 cantidadRtaMalas = 0;
 noKey = KbName('n');
@@ -50,10 +49,12 @@ yesKey = KbName('s');
 
 %Variables de inicialización
 screenNum=0;			               	%número de monitor   
-respuestas=[]; 		    			   	%tiempo en el cual fueron tocadas las teclas
 pantalla='blanca';						%dice que pantalla mostrar
+
+respuestas=[]; 		    			   	%tiempo en el que se presiono cada tecla
+teclasPresionadas=[];					%teclas presionadas
 estimulos=[];            			  	%tiempo en el cual aparecieron los estímulos
-j=1;
+
 
 %Mostrar pantalla
 HideCursor;
@@ -63,20 +64,17 @@ Screen('TextSize', pantalla, 30);
 white=BlackIndex(pantalla);
 
 %Comienzo
-PsychHID('KbQueueCreate');
 Screen('FillRect', pantalla, white);
 frame=Screen('GetFlipInterval' , pantalla);
 DrawFormattedText(pantalla,'El experimento va a comenzar.','center','center',[255 255 255]); 
-comienzo=Screen(pantalla, 'Flip');
+Screen(pantalla, 'Flip');
 WaitSecs(2);
-
 
 
 %function ruido
 %end
 
 %Comienzo experimento
-PsychHID('KbQueueStart');
 
 i=1;
 while i<=cantTarget
@@ -111,53 +109,37 @@ while i<=cantTarget
 	comienzo=GetSecs;
 	DrawFormattedText(pantalla,t{1},'center','center',[255 255 255]); 
 	Screen(pantalla, 'Flip');
-	%WaitSecs(0.005);	
 
-	presiono=false;
-	j=1;
-	while not(presiono)
-		%DrawFormattedText(pantalla,t{1},'center','center',[255 255 255]); 
-		%Screen(pantalla, 'Flip');
+	pressed = 0
+ 	while pressed == 0
+		[pressed, secs, kbData] = KbCheck
+  	end
 
-		[pressed, firstPress]=PsychHID('KbQueueCheck');
-		if pressed
-			pressedCodes=find(firstPress)
-			for j=j:size(pressedCodes, 2)
-				if comienzo > firstPress(pressedCodes(j))
-					continue
-				end
-				presiono=true;
-				tipoObjeto = tipo(i);
+  	FlushEvents('keyDown');
+	
+	respuestas= [respuestas secs];
+	teclasPresionadas = [teclasPresionadas find(kbData)];
+	tiempos_target = [tiempos_target comienzo];
 
-				
-				respuestas= [respuestas pressedCodes]
-				if (tipoObjeto{1} == 'v' && firstPress(yesKey)) || (tipoObjeto{1} == 'n' && firstPress(noKey))
-					tiempos_target = [tiempos_target comienzo];
-					tipoP1 = tipoPriming1(i);
-					tipoP2 = tipoPriming2(i);
-					if  tipoP1{1} == 'R' && tipoP2{1} == 'R' 				%RR
-							RR=[RR firstPress(pressedCodes(j))];
-					else 
-						if tipoP1{1} == 'R' && tipoP2{1}  == 'N'				%NR
-							NR=[NR firstPress(pressedCodes(j))];
-						else 
-							if tipoP1{1} == 'N' && tipoP2{1}  == 'N'				%NN
-								NN=[NN firstPress(pressedCodes(j))];
-							end
-						end
-					end
-				else
-					cantidadRtaMalas = cantidadRtaMalas + 1;
-				end
-			end
-		end
-	end
+		% tipoP1 = tipoPriming1(i);
+		% tipoP2 = tipoPriming2(i);
+		% if  tipoP1{1} == 'R' && tipoP2{1} == 'R' 				%RR
+		% 		RR=[RR tiempoRespuesta];
+		% else 
+		% 	if tipoP1{1} == 'R' && tipoP2{1}  == 'N'				%NR
+		% 		NR=[NR tiempoRespuesta];
+		% 	else 
+		% 		if tipoP1{1} == 'N' && tipoP2{1}  == 'N'				%NN
+		% 			NN=[NN tiempoRespuesta];
+		% 		end
+		% 	end
+		% end
 	i = i+1;
 end
 
 
 DrawFormattedText(pantalla,'El experimento finalizó. \n ¡Muchas gracias!','center','center',[255 255 255]); 
-comienzo=Screen(pantalla, 'Flip');
+Screen(pantalla, 'Flip');
 WaitSecs(3);
 
 PsychHID('KbQueueStop'); %dejo de guardar las teclas

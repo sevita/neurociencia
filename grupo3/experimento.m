@@ -8,13 +8,13 @@ clrdepth=32;		       				%cantidad de bits de los colores
 %estimulo=4;                				%cantidad de frames que dura el estímulo
 %frecuencia=0.8;   
 %duracionExperimento=60*3;     			%medida en segundos
-numExperimento=2;
-%nameFile= sprintf('target_%d.m', numExperimento);
+sujeto=1;
+%nameFile= sprintf('target_%d.m', sujeto);
 %target=load(nameFile);				%[target, prime1, prime2, servivo/novivo, RR/NR/NN]
-%setWords=target(15,5,numExperimento)
+%setWords=target(15,5,sujeto)
 
 
-inputFile = sprintf('priming/palabras%d.csv',numExperimento)
+inputFile = sprintf('priming/palabras%d.csv',sujeto)
 fid = fopen(inputFile, 'r');
 T = textscan(fid, '%s%s%s%s%s%s', 'Delimiter',',');
 fclose(fid);
@@ -37,11 +37,11 @@ tipoPriming1 = tipoPriming1{1};
 tipoPriming2 = T(6);
 tipoPriming2 = tipoPriming2{1};
 
-cantTarget=5;
+cantTarget=40;
 RR=[];
 NR=[];
 NN=[];
-tiempos_target=[]; 			%0 --> ser vivo / 1 --> no vivo
+tiemposTarget=[]; 			%0 --> ser vivo / 1 --> no vivo
 cantidadRtaMalas = 0;
 noKey = KbName('n');
 yesKey = KbName('s'); 
@@ -51,14 +51,14 @@ yesKey = KbName('s');
 screenNum=0;			               	%número de monitor   
 pantalla='blanca';						%dice que pantalla mostrar
 
-respuestas=[]; 		    			   	%tiempo en el que se presiono cada tecla
-teclasPresionadas=[];					%teclas presionadas
+tiemposDeRespuesta=[]; 		    			   	%tiempo en el que se presiono cada tecla
+respuestas=[];					%teclas presionadas
 estimulos=[];            			  	%tiempo en el cual aparecieron los estímulos
 
 
 %Mostrar pantalla
 HideCursor;
-[pantalla,rect]=Screen('OpenWindow', 0, 255, [0 0 resolucion(1), resolucion(2)], clrdepth);
+[pantalla,rect]=Screen('OpenWindow', 0, clrdepth); % 255, [0 0 resolucion(1), resolucion(2)], 
 Screen('TextSize', pantalla, 30);
 [w,h] = Screen('WindowSize',pantalla);
 white=BlackIndex(pantalla);
@@ -112,14 +112,13 @@ while i<=cantTarget
 
 	pressed = 0
  	while pressed == 0
-		[pressed, secs, kbData] = KbCheck
+ 		[pressed, secs, kbData] = KbCheck;
   	end
-
+  	tiempo = secs - comienzo
   	FlushEvents('keyDown');
 	
-	respuestas= [respuestas secs];
-	teclasPresionadas = [teclasPresionadas find(kbData)];
-	tiempos_target = [tiempos_target comienzo];
+	tiemposDeRespuesta= [tiemposDeRespuesta tiempo];
+	respuestas = [respuestas find(kbData)];
 
 		% tipoP1 = tipoPriming1(i);
 		% tipoP2 = tipoPriming2(i);
@@ -142,21 +141,12 @@ DrawFormattedText(pantalla,'El experimento finalizó. \n ¡Muchas gracias!','cen
 Screen(pantalla, 'Flip');
 WaitSecs(3);
 
-PsychHID('KbQueueStop'); %dejo de guardar las teclas
-PsychHID('KbQueueRelease'); %borro la cola
 Screen('CloseAll');
 ShowCursor; 
 
 
-nameFile = sprintf('resultados/tiempos_RR_%d.mat', numExperimento);
-save(nameFile,'RR');
-nameFile = sprintf('resultados/tiempos_NR_%d.mat', numExperimento);
-save(nameFile,'NR');
-nameFile = sprintf('resultados/tiempos_NN_%d.mat', numExperimento);
-save(nameFile,'NN');
-nameFile = sprintf('resultados/tiempos_target_%d.mat', numExperimento);
-save(nameFile,'tiempos_target');
-nameFile = sprintf('resultados/cantPifeadas_%d.mat',numExperimento);
-save(nameFile,'cantidadRtaMalas');
-nameFile = sprintf('resultados/respuestas_%d.mat',numExperimento);
+nameFile = sprintf('resultados/tiemposDeRespuesta_%d.mat',sujeto);
+save(nameFile,'tiemposDeRespuesta');
+
+nameFile = sprintf('resultados/respuestas_%d.mat',sujeto);
 save(nameFile,'respuestas');

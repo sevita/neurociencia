@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 import numpy as np
 import csv
 
@@ -38,6 +41,13 @@ for row in reader:
 palabras = np.array(palabras)
 print palabras.shape
 
+warming = np.array([
+    ["auto", "planeta", "sol", "v", "R", "R"], 
+    ["moto", "pepe", "sol", "v", "R", "R"],
+    ["tiburon", "lala", "zopenco", "v", "R", "R"],
+    ["araña", "jojo", "mal", "v", "R", "R"]
+    ])
+
 #palabras = np.arange(36*4).reshape((36,4))
 
 vivos = palabras[0:18, :]
@@ -60,6 +70,9 @@ for group in range(0, 3):
         subject_id = group*5 + subject
         trials_for_user = trials_for_group[:]
         np.random.shuffle(trials_for_user)
+        print trials_for_user.shape
+        print warming.shape
+        trials_for_user = np.vstack((warming, trials_for_user))
         trials[subject_id] = trials_for_user
         print "---------------------------------"
         print "Subject:", subject_id, "----------------"

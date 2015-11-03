@@ -28,9 +28,6 @@ priming1 = priming1{1};
 priming2 = T(4);
 priming2 = priming2{1};
 
-tipo = T(5);
-tipo = tipo{1};
-
 colorLetras = [240 240 240];
 
 cantTargets=4;
@@ -51,7 +48,7 @@ white=WhiteIndex(pantalla);
 %Comienzo
 Screen('FillRect', pantalla, white);
 frame=Screen('GetFlipInterval' , pantalla);
-DrawFormattedText(pantalla,'El experimento va a comenzar.','center','center',colorLetras); 
+DrawFormattedText(pantalla,'El experimento va a comenzar.','center','center',[0 0 0]); 
 Screen(pantalla, 'Flip');
 WaitSecs(2);
 
@@ -72,14 +69,14 @@ while i<=cantTargets
 	
 	DrawFormattedText(pantalla,'#########','center','center',colorLetras); 
 	%Screen('DrawTexture', pantalla, textureIndex);
-	vbl = Screen(pantalla, 'Flip', vbl + 0.03);
+	vbl = Screen(pantalla, 'Flip', vbl + 0.05);
 
 	DrawFormattedText(pantalla,p2{1},'center','center',colorLetras); 
 	vbl = Screen(pantalla, 'Flip', vbl + 0.5 );
 	
 	DrawFormattedText(pantalla,'#########','center','center',colorLetras); 
 	%Screen('DrawTexture', pantalla, textureIndex);
-	vbl = Screen(pantalla, 'Flip', vbl + 0.03);
+	vbl = Screen(pantalla, 'Flip', vbl + 0.05);
 	
 	comienzo=GetSecs;
 	DrawFormattedText(pantalla,t{1},'center','center',colorLetras); 

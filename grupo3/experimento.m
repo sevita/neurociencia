@@ -19,44 +19,27 @@ fid = fopen(inputFile, 'r');
 T = textscan(fid, '%s%s%s%s%s%s', 'Delimiter',',');
 fclose(fid);
 
-target = T(1);
+target = T(2);
 target = T{1};
 
-priming1 = T(2);
+priming1 = T(3);
 priming1 = priming1{1};
 
-priming2 = T(3);
+priming2 = T(4);
 priming2 = priming2{1};
 
-tipo = T(4);
+tipo = T(5);
 tipo = tipo{1};
-
-tipoPriming1 = T(5);
-tipoPriming1 = tipoPriming1{1};
-
-tipoPriming2 = T(6);
-tipoPriming2 = tipoPriming2{1};
 
 colorLetras = [240 240 240];
 
-cantTarget=4;
-RR=[];
-NR=[];
-NN=[];
-tiemposTarget=[]; 			%0 --> ser vivo / 1 --> no vivo
-cantidadRtaMalas = 0;
-noKey = KbName('n');
-yesKey = KbName('s'); 
-
+cantTargets=4;
+%noKey = KbName('n');
+%yesKey = KbName('s'); 
 
 %Variables de inicialización
-screenNum=0;			               	%número de monitor   
-pantalla='blanca';						%dice que pantalla mostrar
-
 tiemposDeRespuesta=[]; 		    			   	%tiempo en el que se presiono cada tecla
 respuestas=[];					%teclas presionadas
-estimulos=[];            			  	%tiempo en el cual aparecieron los estímulos
-
 
 %Mostrar pantalla
 HideCursor;
@@ -74,7 +57,7 @@ WaitSecs(2);
 
 
 i=1;
-while i<=cantTarget
+while i<=cantTargets
 	p1 = priming1(i);
 	p2 = priming2(i);
 	t = target(i);

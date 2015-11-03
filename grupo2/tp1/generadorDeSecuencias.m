@@ -39,11 +39,7 @@ for i = 1:cantColores
 						pintar = randi(cantColores);
 					end
 				else
-					if numExperimento == 1
-						pintar=6;
-					else
-						pintar=5;
-					end
+					pintar=6;
 				end
 				numAux(1,pos)=pintar;
 				break;
@@ -63,12 +59,16 @@ for i = 1:cantPasesxColor
 		indice(1,numero)=indice(1,numero)+1;
 		if numExperimento == 1
 			fondo = 5;
-		else
-			fondo = randi(cantColores);
-			[fil,col]=size(secuencia);
-			while fondo == colorLetra | (fil~=0 && (fondo==secuencia(fil,3)))
-				fondo = randi(cantColores);
-			end
+        else
+            if entrenamiento
+                fondo = 5;
+            else
+                fondo = randi(cantColores);
+                [fil,col]=size(secuencia);
+                while fondo == colorLetra | (fil~=0 && (fondo==secuencia(fil,3)))
+                    fondo = randi(cantColores);
+                end
+            end
 		end
 		secuencia=[secuencia; numero colorLetra fondo];
 	end

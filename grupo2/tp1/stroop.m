@@ -124,7 +124,16 @@ Screen('CloseAll');
 ShowCursor;
 
 
+%{
+[archivo,ruta]=uigetfile('resultados.txt','ABRIR ARCHIVO');
+if archivo==0
+    return;
+else
+fid =fopen([ruta archivo],'r');
+A=textscan(fid,'%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f','headerlines',1);
+A=cell2mat(A);
+fclose(fid);
+display(A)
+end	
 
-
-
-%[secs, keyCode, deltaSecs] = KbWait([deviceNumber][, forWhat=0][, untilTime=inf])
+}%

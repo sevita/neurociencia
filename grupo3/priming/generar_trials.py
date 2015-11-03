@@ -44,8 +44,8 @@ print palabras.shape
 warming = np.array([
     ["auto", "planeta", "sol", "v", "R", "R"], 
     ["moto", "pepe", "sol", "v", "R", "R"],
-    ["tiburon", "lala", "zopenco", "v", "R", "R"],
-    ["araña", "jojo", "mal", "v", "R", "R"]
+    ["tiburon", "luna", "bien", "v", "R", "R"],
+    ["araña", "mira", "mal", "v", "R", "R"]
     ])
 
 #palabras = np.arange(36*4).reshape((36,4))

@@ -37,7 +37,9 @@ tipoPriming1 = tipoPriming1{1};
 tipoPriming2 = T(6);
 tipoPriming2 = tipoPriming2{1};
 
-cantTarget=40;
+colorLetras = [240 240 240];
+
+cantTarget=4;
 RR=[];
 NR=[];
 NN=[];
@@ -59,22 +61,17 @@ estimulos=[];            			  	%tiempo en el cual aparecieron los estímulos
 %Mostrar pantalla
 HideCursor;
 [pantalla,rect]=Screen('OpenWindow', 0, clrdepth); % 255, [0 0 resolucion(1), resolucion(2)], 
-Screen('TextSize', pantalla, 30);
+Screen('TextSize', pantalla, 100);
 [w,h] = Screen('WindowSize',pantalla);
-white=BlackIndex(pantalla);
+white=WhiteIndex(pantalla);
 
 %Comienzo
 Screen('FillRect', pantalla, white);
 frame=Screen('GetFlipInterval' , pantalla);
-DrawFormattedText(pantalla,'El experimento va a comenzar.','center','center',[255 255 255]); 
+DrawFormattedText(pantalla,'El experimento va a comenzar.','center','center',colorLetras); 
 Screen(pantalla, 'Flip');
 WaitSecs(2);
 
-
-%function ruido
-%end
-
-%Comienzo experimento
 
 i=1;
 while i<=cantTarget
@@ -83,32 +80,27 @@ while i<=cantTarget
 	t = target(i);
 	
 	%Screen('FillRect', pantalla, white);
-	DrawFormattedText(pantalla,'#########','center','center',[255 255 255]); 
-	Screen(pantalla, 'Flip');
-	WaitSecs(0.5);
-
+	DrawFormattedText(pantalla,'#########','center','center',colorLetras); 
+	%Screen('DrawTexture', pantalla, textureIndex);
+	vbl = Screen(pantalla, 'Flip');
 	
-	DrawFormattedText(pantalla,p1{1},'center','center',[255 255 255]); 
-	Screen(pantalla, 'Flip');
-	WaitSecs(0.01);
-
-	DrawFormattedText(pantalla,'#########','center','center',[255 255 255]); 
-	Screen(pantalla, 'Flip');
-	WaitSecs(0.5);
-
+	DrawFormattedText(pantalla,p1{1},'center','center',colorLetras); 
+	vbl = Screen(pantalla, 'Flip', vbl + 0.5 );
 	
-	DrawFormattedText(pantalla,p2{1},'center','center',[255 255 255]); 
-	Screen(pantalla, 'Flip');
-	WaitSecs(0.01);	
+	DrawFormattedText(pantalla,'#########','center','center',colorLetras); 
+	%Screen('DrawTexture', pantalla, textureIndex);
+	vbl = Screen(pantalla, 'Flip', vbl + 0.03);
 
-	DrawFormattedText(pantalla,'#########','center','center',[255 255 255]); 
-	Screen(pantalla, 'Flip');
-	WaitSecs(0.5);
-
+	DrawFormattedText(pantalla,p2{1},'center','center',colorLetras); 
+	vbl = Screen(pantalla, 'Flip', vbl + 0.5 );
+	
+	DrawFormattedText(pantalla,'#########','center','center',colorLetras); 
+	%Screen('DrawTexture', pantalla, textureIndex);
+	vbl = Screen(pantalla, 'Flip', vbl + 0.03);
 	
 	comienzo=GetSecs;
-	DrawFormattedText(pantalla,t{1},'center','center',[255 255 255]); 
-	Screen(pantalla, 'Flip');
+	DrawFormattedText(pantalla,t{1},'center','center',colorLetras); 
+	Screen(pantalla, 'Flip', vbl + 0.5);
 
 	pressed = 0
  	while pressed == 0
@@ -120,24 +112,11 @@ while i<=cantTarget
 	tiemposDeRespuesta= [tiemposDeRespuesta tiempo];
 	respuestas = [respuestas find(kbData)];
 
-		% tipoP1 = tipoPriming1(i);
-		% tipoP2 = tipoPriming2(i);
-		% if  tipoP1{1} == 'R' && tipoP2{1} == 'R' 				%RR
-		% 		RR=[RR tiempoRespuesta];
-		% else 
-		% 	if tipoP1{1} == 'R' && tipoP2{1}  == 'N'				%NR
-		% 		NR=[NR tiempoRespuesta];
-		% 	else 
-		% 		if tipoP1{1} == 'N' && tipoP2{1}  == 'N'				%NN
-		% 			NN=[NN tiempoRespuesta];
-		% 		end
-		% 	end
-		% end
 	i = i+1;
 end
 
 
-DrawFormattedText(pantalla,'El experimento finalizó. \n ¡Muchas gracias!','center','center',[255 255 255]); 
+DrawFormattedText(pantalla,'El experimento finalizó. \n ¡Muchas gracias!','center','center',colorLetras); 
 Screen(pantalla, 'Flip');
 WaitSecs(3);
 

@@ -21,7 +21,7 @@ cantColores=4;                 %cantidad de colores que tiene el experimento
 
 font='Times New Roman';     %tipo de letra
 tamanioDelTexto=45;			%tamaño de las palabras de los estímulos
-nombreColores=char('ROJO','AZUL','VERDE','NARANJA','NEGRO','BLANCO'); %palabras que aparecen en el estímulo
+nombreColores=char('ROJO','AZUL','VERDE','AMARILLO','NEGRO','BLANCO'); %palabras que aparecen en el estímulo
 colores=[[255 0 0]; [0 0 255]; [0 204 0]; [204 204 0]; [0 0 0]; [255 255 255]]; %palabras que aparecen en el estímulo
 
 %definiciones

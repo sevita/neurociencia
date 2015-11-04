@@ -130,7 +130,7 @@ end
 
 %almacenamiento de datos en archivo
 fid=fopen('resultados.txt','a');
-for i=1:cantPasesxColorExperimento*cantColores
+for i=1:cantPasesxColorEntrenamiento*cantColores+cantPasesxColorExperimento*cantColores
 	fprintf(fid,'%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\n',resultados(i,1),resultados(i,2),resultados(i,3),resultados(i,4),resultados(i,5),resultados(i,6),resultados(i,7),resultados(i,8));
 end
 fclose(fid);

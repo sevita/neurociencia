@@ -90,8 +90,8 @@ while i<=cantTargets
   	FlushEvents('keyDown');
 	
 	tiemposDeRespuesta= [tiemposDeRespuesta tiempo];
-	respuestas = [respuestas find(kbData)];
-	colorLetras = colorLetras - 10;
+	respuestas = [respuestas find(kbData)]
+	colorLetras = colorLetras - 5;
 	i = i+1;
 end
 

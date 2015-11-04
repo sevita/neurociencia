@@ -42,10 +42,10 @@ palabras = np.array(palabras)
 print palabras.shape
 
 warming = np.array([
-    [0, "auto", "planeta", "sol", "v", "R", "R"], 
-    [0, "moto", "pepe", "sola", "v", "R", "R"],
-    [0, "tiburon", "luna", "bien", "v", "R", "R"],
-    [0, "araña", "mira", "mal", "v", "R", "R"]
+    [0, "automóvil", "planeta", "sol", "v", "R", "R"], 
+    [0, "motocicleta", "imaginación", "sola", "v", "R", "R"],
+    [0, "tiburón", "lunar", "ladron", "v", "R", "R"],
+    [0, "araña", "mira", "maldad", "v", "R", "R"]
     ])
 
 vivos = palabras[0:18, :]

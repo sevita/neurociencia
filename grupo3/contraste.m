@@ -14,7 +14,7 @@ sujeto=1;
 %setWords=target(15,5,sujeto)
 
 
-inputFile = sprintf('priming/palabras%d.csv',sujeto)
+inputFile = 'priming/contraste.csv'
 fid = fopen(inputFile, 'r');
 T = textscan(fid, '%d%s%s%s%s%s%s', 'Delimiter',',');
 fclose(fid);
@@ -28,9 +28,9 @@ priming1 = priming1{1};
 priming2 = T(4);
 priming2 = priming2{1};
 
-colorLetras = [240 240 240];
+colorLetras = [250 250 250];
 
-cantTargets=4;
+cantTargets=6;
 %noKey = KbName('n');
 %yesKey = KbName('s'); 
 
@@ -79,7 +79,7 @@ while i<=cantTargets
 	vbl = Screen(pantalla, 'Flip', vbl + 0.05);
 	
 	comienzo=GetSecs;
-	DrawFormattedText(pantalla,t{1},'center','center',colorLetras); 
+	DrawFormattedText(pantalla,mat2str(colorLetras),'center','center',[0 0 0]); 
 	Screen(pantalla, 'Flip', vbl + 0.5);
 
 	pressed = 0
@@ -91,21 +91,10 @@ while i<=cantTargets
 	
 	tiemposDeRespuesta= [tiemposDeRespuesta tiempo];
 	respuestas = [respuestas find(kbData)];
-
+	colorLetras = colorLetras - 10;
 	i = i+1;
 end
 
 
-DrawFormattedText(pantalla,'El experimento finalizó. \n ¡Muchas gracias!','center','center',colorLetras); 
-Screen(pantalla, 'Flip');
-WaitSecs(3);
-
 Screen('CloseAll');
 ShowCursor; 
-
-
-nameFile = sprintf('resultados/tiemposDeRespuesta_%d.mat',sujeto);
-save(nameFile,'tiemposDeRespuesta');
-
-nameFile = sprintf('resultados/respuestas_%d.mat',sujeto);
-save(nameFile,'respuestas');

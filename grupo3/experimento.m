@@ -6,56 +6,15 @@ clrdepth=32;		       				%cantidad de bits de los colores
 
 colorLetras = [];
 
-sujeto=1;
-%Variables del experimento
-%estimulo=4;                				%cantidad de frames que dura el estímulo
-%frecuencia=0.8;   
-%duracionExperimento=60*3;     			%medida en segundos
-%nameFile= sprintf('target_%d.m', sujeto);
-%target=load(nameFile);				%[target, prime1, prime2, servivo/novivo, RR/NR/NN]
-%setWords=target(15,5,sujeto)
-
-
-inputFile = sprintf('priming/palabras%d.csv',sujeto)
-fid = fopen(inputFile, 'r');
-T = textscan(fid, '%d%s%s%s%s%s%s', 'Delimiter',',');
-fclose(fid);
-
-target = T(2);
-target = target{1};
-
-priming1 = T(3);
-priming1 = priming1{1};
-
-priming2 = T(4);
-priming2 = priming2{1};
-
-cantTargets=40;
-%noKey = KbName('n');
-%yesKey = KbName('s'); 
-
-%Variables de inicialización
-tiemposDeRespuesta=[]; 		    			   	%tiempo en el que se presiono cada tecla
-respuestas=[];					%teclas presionadas
 
 %Mostrar pantalla
 HideCursor;
-[pantalla,rect]=Screen('OpenWindow', 0, 255, [0 0 resolucion(1), resolucion(2)], clrdepth);
+[pantalla,rect]=Screen('OpenWindow', 0, clrdepth); %255, [0 0 resolucion(1), resolucion(2)], );  %
 Screen('TextSize', pantalla, 100);
 [w,h] = Screen('WindowSize',pantalla);
 white=WhiteIndex(pantalla);
 
-
-%Variables del experimento
-%estimulo=4;                				%cantidad de frames que dura el estímulo
-%frecuencia=0.8;   
-%duracionExperimento=60*3;     			%medida en segundos
-
-%nameFile= sprintf('target_%d.m', sujeto);
-%target=load(nameFile);				%[target, prime1, prime2, servivo/novivo, RR/NR/NN]
-%setWords=target(15,5,sujeto)
-
-
+%CONTRASTE
 inputFile = 'priming/contraste.csv'
 fid = fopen(inputFile, 'r');
 T = textscan(fid, '%d%s%s%s%s%s%s', 'Delimiter',',');
@@ -73,15 +32,7 @@ priming2 = priming2{1};
 colorLetras = [250 250 250];
 
 cantTargets=6;
-%noKey = KbName('n');
-%yesKey = KbName('s'); 
 
-%Variables de inicialización
-tiemposDeRespuesta=[]; 		    			   	%tiempo en el que se presiono cada tecla
-respuestas=[];					%teclas presionadas
-
-
-%Comienzo
 Screen('FillRect', pantalla, white);
 frame=Screen('GetFlipInterval' , pantalla);
 DrawFormattedText(pantalla,'Para empezar, calibremos.','center','center',[0 0 0]); 
@@ -122,11 +73,8 @@ while i<=cantTargets
  	while pressed == 0
  		[pressed, secs, kbData] = KbCheck;
   	end
-  	tiempo = secs - comienzo
   	FlushEvents('keyDown');
 	
-	tiemposDeRespuesta= [tiemposDeRespuesta tiempo];
-	respuestas = [respuestas find(kbData)]
 	if find(kbData) == 88
 		i = cantTargets+1
 		colorLetras = colorLetras + 5
@@ -136,16 +84,31 @@ while i<=cantTargets
 	end
 end
 
-
-
-
-%Comienzo
+%EXPERIMENTO
 Screen('FillRect', pantalla, white);
 frame=Screen('GetFlipInterval' , pantalla);
 DrawFormattedText(pantalla,'El experimento va a comenzar.','center','center',[0 0 0]); 
 Screen(pantalla, 'Flip');
 WaitSecs(2);
 
+
+inputFile = sprintf('priming/palabras%d.csv',sujeto)
+fid = fopen(inputFile, 'r');
+T = textscan(fid, '%d%s%s%s%s%s%s', 'Delimiter',',');
+fclose(fid);
+
+target = T(2);
+target = target{1};
+
+priming1 = T(3);
+priming1 = priming1{1};
+
+priming2 = T(4);
+priming2 = priming2{1};
+
+cantTargets=40;
+tiemposDeRespuesta=[]; 		    			   	%tiempo en el que se presiono cada tecla
+respuestas=[];					%teclas presionadas
 
 i=1;
 while i<=cantTargets

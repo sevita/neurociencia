@@ -40,7 +40,7 @@ respuestas=[];					%teclas presionadas
 
 %Mostrar pantalla
 HideCursor;
-[pantalla,rect]=Screen('OpenWindow', 0, clrdepth); % 255, [0 0 resolucion(1), resolucion(2)], 
+[pantalla,rect]=Screen('OpenWindow', 0, 255, [0 0 resolucion(1), resolucion(2)],  clrdepth); %
 Screen('TextSize', pantalla, 100);
 [w,h] = Screen('WindowSize',pantalla);
 white=WhiteIndex(pantalla);
@@ -91,9 +91,16 @@ while i<=cantTargets
 	
 	tiemposDeRespuesta= [tiemposDeRespuesta tiempo];
 	respuestas = [respuestas find(kbData)]
-	colorLetras = colorLetras - 5;
-	i = i+1;
+	if find(kbData) == 88
+		i = cantTargets+1
+		colorLetras = colorLetras + 5
+	else 
+		i = i+1;
+		colorLetras = colorLetras - 5;
+	end
 end
+
+color = colorLetras(1)
 
 
 Screen('CloseAll');

@@ -1,8 +1,8 @@
-0,auto,planeta,sol,v,R,R
-0,moto,pepe,sola,v,R,R
-0,tiburon,luna,bien,v,R,R
-0,araña,mira,mal,v,R,R
-24,botella,liquido,tapa,n,R,R
+0,automóvil,planeta,sol,v,R,R
+0,motocicleta,imaginación,sola,v,R,R
+0,tiburón,lunar,ladron,v,R,R
+0,araña,mira,maldad,v,R,R
+24,botella,líquido,tapa,n,R,R
 28,lluvia,remera,algodón,n,N,N
 11,enredadera,bióloga,laboratorio,v,N,N
 13,abuelo,nieto,rosa,v,R,N
@@ -10,7 +10,7 @@
 14,pasto,verde,nieto,v,R,N
 36,teléfono,sonar,altura,n,R,N
 20,peine,nudo,peluquería,n,R,R
-25,mascara,proyector,imagen,n,N,N
+25,máscara,proyector,imagen,n,N,N
 12,minero,enredadera,pared,v,N,N
 5,pez,mar,red,v,R,R
 17,juez,ley,navidad,v,R,N
@@ -18,7 +18,7 @@
 10,bióloga,piojo,pelo,v,N,N
 1,cóndor,buitre,vuelo,v,R,R
 35,nube,altura,eléctrico,n,R,N
-26,dinero,mascara,carnaval,n,N,N
+26,dinero,máscara,carnaval,n,N,N
 15,presidente,pueblo,verde,v,R,N
 6,cucaracha,sucio,plaga,v,R,R
 22,reloj,tiempo,cucu,n,R,R
@@ -33,8 +33,8 @@
 8,hongo,docente,pizarra,v,N,N
 33,río,puente,texto,n,R,N
 9,piojo,hongo,humedad,v,N,N
-23,lampara,luz,habitación,n,R,R
+23,lámpara,luz,habitación,n,R,R
 21,palo,perro,largo,n,R,R
-18,flor,rosa,ley,v,R,N
+18,planta,rosa,ley,v,R,N
 2,foca,marino,pelota,v,R,R
 16,pino,navidad,pueblo,v,R,N

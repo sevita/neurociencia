@@ -1,8 +1,7 @@
 
 
-def crearCancion (nombreCancion, artista, fechaIngreso, letra, fechas, posiciones, id_cancion, patricia):
+def crearCancion (nombreCancion, artista, fechaIngreso, letra, fechas, posiciones, bd):
 	cancion = {}
-	cancion['id'] = id_cancion
 	cancion['nombre'] = nombreCancion
 	cancion['artista'] = artista
 	cancion['fechaIngreso'] = fechaIngreso
@@ -10,7 +9,6 @@ def crearCancion (nombreCancion, artista, fechaIngreso, letra, fechas, posicione
 	cancion['fechas'] = [fechas]
 	cancion['posiciones'] = [posiciones]
 
-	indicePatricia = nombreCancion + artista
-	patricia[indicePatricia] = id_cancion
+	indice = nombreCancion + artista
+	bd[indice] = cancion
 
-	return cancion

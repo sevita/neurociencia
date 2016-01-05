@@ -1,21 +1,26 @@
 import nltk
 import urllib3
-
-def obtenerInfoYoutube(url, etiquetaInicio, etiquetaFin):
-    html = http.request('GET', url, preload_content=False).read()
-    ind = html.find(etiquetaInicio)
-    ind = ind + len(etiquetaInicio) #tam de <div class="watch-view-count">
-    ind2 = html.find(etiquetaFin,ind)
-    return html[ind:ind2]
+from multiprocessing import *
+from functools import partial
 
 
 
+
+
+def obtenerLetraDeCanciones():
+    pool = Pool(processes=8)
+    lista = [1,2,3,4,5,6,7,8,9,10]
+    g = partial(sumaConInt, b=8)
+
+    datos = pool.map(g, lista)
+
+    print datos
+
+def sumaConInt(a, b):
+    return supersuma(a,b)
+
+def supersuma(a,b):
+    return b-a
 
 if __name__ == "__main__":
-    http = urllib3.PoolManager()
-    url = 'https://www.youtube.com/watch?v=YY33oEDtJv0&list=PLJ5I5YkfRZ_fkL2bRCZpoC1sMbzVIbiRU&index=19'
-    view = obtenerInfoYoutube(url,'<div class="watch-view-count">','</div>')
-    titulo = obtenerInfoYoutube(url,'<title>','- YouTube</title>')
-
-    print view
-    print titulo
+    obtenerLetraDeCanciones()

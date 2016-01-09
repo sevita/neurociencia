@@ -1,21 +1,71 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #help: http://www.crummy.com/software/BeautifulSoup/bs4/doc/
-#1958-08-09 primera billboard
 
-import nltk
 import sys
+import nltk
 from urllib3 import *
 import pickle
 from datetime import *
 from PyLyrics import *
-from estructuras import *
 from bs4 import BeautifulSoup
 from pyechonest import *
 from multiprocessing import *
 from functools import partial
     
 config.ECHO_NEST_API_KEY="RC8OZFTSKR6SJWGHF"
+
+from estructuras import *
+
+def generarCorpusDeDatos(rankingBillboard, cancionesPorAnio, generos, rankingGeneros, cancionesPorAnioGenero):
+    #creamos un diccionario en el cual se guardan todas las canciones que 
+    #figuran en el ranking billboard junto a la fecha en la que
+    #aparecen y su posicion en dicho ranking
+    descargarRankingBillboard(rankingBillboard, cancionesPorAnio)
+    #agregamos las letras de las canciones 
+    obtenerLetraDeCanciones(rankingBillboard)
+    #descargamos los generos de las canciones
+    descargarRankingGeneros(rankingGeneros, cancionesPorAnioGenero, generos, rankingBillboard)
+
+    #guardamos los datos parciales
+    file_Name = "datos/bdGeneros.txt"
+    fileObject = open(file_Name,'wb') 
+    pickle.dump(rankingGeneros,fileObject) 
+    fileObject.close()
+    
+    file_Name = "datos/cancionesPorAnioGeneros.txt"
+    fileObject = open(file_Name,'wb') 
+    pickle.dump(cancionesPorAnioGenero,fileObject) 
+    fileObject.close()
+
+    file_Name = "datos/bdConLetra3.txt"
+    fileObject = open(file_Name,'wb') 
+    pickle.dump(rankingBillboard,fileObject) 
+    fileObject.close()
+
+    file_Name = "datos/cancionesPorAnio.txt"
+    fileObject = open(file_Name,'wb') 
+    pickle.dump(cancionesPorAnio,fileObject) 
+    fileObject.close()
+
+    #agregamos las letras de las canciones de los generos que falten
+    obtenerLetraDeCancionesGeneros(rankingGeneros, generos)
+
+    #guardamos los datos finales
+    file_Name = "datos/bdGeneros.txt"
+    fileObject = open(file_Name,'wb') 
+    pickle.dump(rankingGeneros,fileObject) 
+    fileObject.close()
+    
+    file_Name = "datos/cancionesPorAnioGeneros.txt"
+    fileObject = open(file_Name,'wb') 
+    pickle.dump(cancionesPorAnioGenero,fileObject) 
+    fileObject.close()
+
+    file_Name = "datos/bdConLetra3.txt"
+    fileObject = open(file_Name,'wb') 
+    pickle.dump(cancionesPorAnioGenero,fileObject) 
+    fileObject.close()
 
 ###################################################################################################
 #####                                Normalizamos los nombres                                 #####
@@ -80,18 +130,17 @@ def descargarRankingBillboard(bd, cancionesPorAnio):
             cargarChart(fecha, bd, cancionesPorAnio, cancionesDelRanking)
             
         except:
-            print "fallo " + fecha
-            print >> sys.stderr, "fallo " + fecha
+            print "fallo " + fecha.strftime("%Y-%m-%d")
+            print >> sys.stderr, "fallo " + fecha.strftime("%Y-%m-%d")
 
         fecha = fecha + timedelta(days=7)   
 
         #guardamos los datos parciales
-        file_Name = "datos/bd.txt"
+        file_Name = "datos/bdConLetra3.txt"
         fileObject = open(file_Name,'wb') 
         pickle.dump(bd,fileObject) 
         fileObject.close()
         
-        #guardamos los datos parciales
         file_Name = "datos/cancionesPorAnio.txt"
         fileObject = open(file_Name,'wb') 
         pickle.dump(cancionesPorAnio,fileObject) 
@@ -99,8 +148,8 @@ def descargarRankingBillboard(bd, cancionesPorAnio):
 
 def cargarChart(fecha, bd, cancionesPorAnio, cancionesDelRanking):
     if cancionesDelRanking == []:
-        print "fallo " + fecha
-        print >> sys.stderr,"fallo " + fecha
+        print "fallo " + fecha.strftime("%Y-%m-%d")
+        print >> sys.stderr,"fallo " + fecha.strftime("%Y-%m-%d")
     else:
         anio = fecha[:4] #obtenemos el año de la fecha
         if anio not in cancionesPorAnio: #creamos un arreglo en donde se van a guardas las canciones que sonaron un año determinado
@@ -223,8 +272,8 @@ def obtenerLetraLyricsfreak(nombreCancion, nombreArtista):
 def descargarRankingGeneros(bdGeneros, cancionesPorAnio, generos, bdBillboard):
     for idGenero in range(len(generos)):
         fecha = date(2016,1,9)
-        print fecha
-        print >> sys.stderr,fecha
+        print fecha.strftime("%Y-%m-%d")
+        print >> sys.stderr,fecha.strftime("%Y-%m-%d")
 
         fecha = fecha.strftime("%Y-%m-%d")
         fallo = False
@@ -261,7 +310,6 @@ def descargarRankingGeneros(bdGeneros, cancionesPorAnio, generos, bdBillboard):
             pickle.dump(bdGeneros,fileObject) 
             fileObject.close()
             
-            #guardamos los datos parciales
             file_Name = "datos/cancionesPorAnioGeneros.txt"
             fileObject = open(file_Name,'wb') 
             pickle.dump(cancionesPorAnio,fileObject) 
@@ -276,97 +324,3 @@ def cruzarBases(genero, bdGenero, bdBillboard):
             agregarGenero(genero, clave, bdBillboard)
             #colocamos la letra del tema en la bd del genero
             pasarLetra(clave, bdBillboard, bdGenero)
-
-if __name__ == "__main__":
-    #definimos los diccionarios
-    rankingBillboard           = {} #hot 100
-    cancionesPorAnio           = {} #hot 100
-    generos                    = ["pop","rock","country","r-b-hip-hop","rap","dance-electronic","latin"]
-    rankingGeneros             = [{},{},{},{},{},{},{}]
-    cancionesPorAnioGenero     = [{},{},{},{},{},{},{}]
-
-    #leo los datos
-    file_Name = "datos/bdConLetra2.txt"
-    fileObject = open(file_Name,'r')  
-    rankingBillboard = pickle.load(fileObject) 
-    fileObject.close()
-
-    #leo los datos
-    file_Name = "datos/cancionesPorAnio.txt"
-    fileObject = open(file_Name,'r')  
-    cancionesPorAnio = pickle.load(fileObject) 
-    fileObject.close()
-
-    #creamos un diccionario en el cual se guardan todas las canciones que 
-    #figuran en el ranking billboard junto a la fecha en la que
-    #aparecen y su posicion en dicho ranking
-        #descargarRankingBillboard(rankingBillboard, cancionesPorAnio)
-    #agregamos las letras de las canciones 
-        #obtenerLetraDeCanciones(rankingBillboard)
-    #descargamos los generos de las canciones
-    descargarRankingGeneros(rankingGeneros, cancionesPorAnioGenero, generos, rankingBillboard)
-
-    #guardamos los datos parciales
-    file_Name = "datos/bdGeneros.txt"
-    fileObject = open(file_Name,'wb') 
-    pickle.dump(rankingGeneros,fileObject) 
-    fileObject.close()
-    
-    #guardamos los datos parciales
-    file_Name = "datos/cancionesPorAnioGeneros.txt"
-    fileObject = open(file_Name,'wb') 
-    pickle.dump(cancionesPorAnioGenero,fileObject) 
-    fileObject.close()
-
-    print "agregar letra"
-    print >> sys.stderr,"agregar letra"
-
-    #agregamos las letras de las canciones de los generos que falten
-    obtenerLetraDeCancionesGeneros(rankingGeneros, generos)
-
-    #guardamos los datos parciales
-    file_Name = "datos/bdGeneros.txt"
-    fileObject = open(file_Name,'wb') 
-    pickle.dump(rankingGeneros,fileObject) 
-    fileObject.close()
-    
-    #guardamos los datos parciales
-    file_Name = "datos/cancionesPorAnioGeneros.txt"
-    fileObject = open(file_Name,'wb') 
-    pickle.dump(cancionesPorAnioGenero,fileObject) 
-    fileObject.close()
-
-    file_Name = "datos/bdConLetra3.txt"
-    fileObject = open(file_Name,'wb') 
-    pickle.dump(cancionesPorAnioGenero,fileObject) 
-    fileObject.close()
-
-    print "MIL GRACIAS GASTON!!!!!"
-    #leo los datos
-    #file_Name = "datos/bdConLetra2.txt"
-    #fileObject = open(file_Name,'r')  
-    #bd = pickle.load(fileObject) 
-    #fileObject.close()
-    
-    #guardo los datos
-    #file_Name = "datos/bdConLetra2.txt"
-    #fileObject = open(file_Name,'wb') 
-    #pickle.dump(bd,fileObject) 
-    #fileObject.close()
-
-
-
- #  def actualizarLetraMetrolyrics(): 
- #   nombreCancion = raw_input('Ingrese el nombre de la cancion: ')
- #   nombreArtista = raw_input('Ingrese el nombre del artista: ')
- #   url = raw_input('Ingrese la URL de Metrolyrics:')
-
- #  clave = normalizarNombre(nombreCancion)+normalizarNombreArtista(nombreArtista)
-
- #   letra = ''
- #   html = http.request('GET', url, preload_content=False).read()
- #   soup = BeautifulSoup(html, 'html.parser')
- #   soup = soup.find(id="lyrics-body-text") #obtengo la letra
- #   for verso in soup.findAll('p'):
- #       letra = letra + verso.get_text() + ' ' #obtengo los versos
- #   bd[clave]['letra'] = letra.replace("\n", " ").rstrip() #saco los enter's y el último espacio en blanco

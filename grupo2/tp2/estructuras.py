@@ -14,7 +14,7 @@ def crearCancion (bd, clave, nombreCancion, artista, fechaIngreso, posiciones):
 
 def actualizarCancion(bd, clave, fecha, posicion):
 	bd[clave]['fechas'].append(fecha)
-    bd[clave]['posiciones'].append(posicion)
+	bd[clave]['posiciones'].append(posicion)
 
 def obtenerNombreYArtista(idCancion, bd):
     return (bd[idCancion]['nombre'], bd[idCancion]['artista'])
@@ -25,3 +25,9 @@ def faltaLetra(idCancion, bd):
 def agregarLetra ((idCancion, letra), bd):
     if idCancion != 0:
         bd[idCancion]['letra'] = letra
+
+def agregarGenero(genero, idCancion, bd):
+	bd[idCancion]['genero'] = genero
+
+def pasarLetra(idCancion, bdBillboard, bdGenero):
+	bdGenero[idCancion]['letra'] = bdBillboard[idCancion]['letra']

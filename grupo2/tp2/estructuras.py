@@ -1,4 +1,14 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
+def crearCancionBillboard (bd, clave, nombreCancion, artista, posicion): #primera parte
+	cancion = {}
+	cancion['nombre'] = nombreCancion
+	cancion['artista'] = artista
+	cancion['letra'] = "none"
+	cancion['posiciones'] = posicion #posicion en la que aparece en el ranking
+
+	bd[clave] = cancion
 
 def crearCancion (bd, clave, nombreCancion, artista, fechaIngreso, posiciones):
 	cancion = {}
@@ -16,13 +26,13 @@ def actualizarCancion(bd, clave, fecha, posicion):
 	bd[clave]['fechas'].append(fecha)
 	bd[clave]['posiciones'].append(posicion)
 
-def obtenerNombreYArtista(idCancion, bd):
+def obtenerNombreYArtista(idCancion, bd): #primera parte
     return (bd[idCancion]['nombre'], bd[idCancion]['artista'])
 
 def faltaLetra(idCancion, bd):
     return bd[idCancion]['letra'] == 'none'
 
-def agregarLetra ((idCancion, letra), bd):
+def agregarLetra ((idCancion, letra), bd): #primera parte
     if idCancion != 0:
         bd[idCancion]['letra'] = letra
 
